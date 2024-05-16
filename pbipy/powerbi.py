@@ -838,7 +838,27 @@ class PowerBI:
         pipeline = Pipeline(pipeline, self.session)
         pipeline.load()
 
-        return pipeline    
+        return pipeline
+    
+    def pipelines(
+        self,
+    ) -> list[Pipeline]:
+        resource = self.BASE_URL + "/pipelines"
+        raw = _utils.get_raw(
+            resource,
+            self.session
+        )
+
+        pipelines = [
+            Pipeline(
+                pipeline_js.get("id"),
+                self.session,
+                raw=pipeline_js
+            )
+            for pipeline_js in raw                
+        ]
+
+        return pipelines
 
     def create_pipeline(
         self,

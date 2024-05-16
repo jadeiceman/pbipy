@@ -52,27 +52,18 @@ class Pipeline(Resource):
         self,
     ) -> None:
         resource = self.base_path
-        
+
         _utils.delete(
             resource,
             self.session
         )
-    
-    def get_pipeline_operation(
+
+    def delete_pipeline_user(
         self,
-        operation_id: str,
-    ) -> dict:
-        resource = self.base_path + f"/operations/{operation_id}"
-        return _utils.get_raw(
-            resource,
-            self.session
-        )
-    
-    def get_pipeline_operations(
-        self,
-    ) -> list[dict]:
-        resource = self.base_path + f"/operations"
-        return _utils.get_raw(
+        identifier: str,
+    ) -> None:
+        resource = self.base_path + f"/users/{identifier}"
+        _utils.delete(
             resource,
             self.session
         )
@@ -137,6 +128,53 @@ class Pipeline(Resource):
             raise DeploymentError
         
         return operation
+    
+    def get_pipeline_operation(
+        self,
+        operation_id: str,
+    ) -> dict:
+        resource = self.base_path + f"/operations/{operation_id}"
+        return _utils.get_raw(
+            resource,
+            self.session
+        )
+    
+    def get_pipeline_operations(
+        self,
+    ) -> list[dict]:
+        resource = self.base_path + f"/operations"
+        return _utils.get_raw(
+            resource,
+            self.session
+        )
+    
+    def get_pipeline_stage_artifacts(
+        self,
+        stage_order: int,
+    ) -> dict:
+        resource = self.base_path + f"/stages/{stage_order}/artifacts"
+        return _utils.get_raw(
+            resource,
+            self.session,
+        )
+    
+    def get_pipeline_stages(
+        self,
+    ) -> list[dict]:
+        resource = self.base_path + "/stages"
+        return _utils.get_raw(
+            resource,
+            self.session
+        )
+    
+    def get_pipeline_users(
+        self,
+    ) -> list[dict]:
+        resource = self.base_path + "/users"
+        return _utils.get_raw(
+            resource,
+            self.session
+        )
 
     def selective_deploy(
         self,
@@ -218,3 +256,58 @@ class Pipeline(Resource):
             raise DeploymentError
         
         return operation
+    
+    def unassign_workspace(
+        self,
+        stage_order: int,
+    ) -> None:
+        resource = self.base_path + f"/stages/{stage_order}/unassignWorkspace"
+
+        _utils.post(
+            resource,
+            self.session
+        )
+
+    def update_pipeline(
+        self,
+        description: str = None,
+        display_name: str = None,
+    ) -> dict:
+        resource = self.base_path
+
+        update_pipeline_request = {
+            "description": description,
+            "displayName": display_name,
+        }
+
+        prepared_request = _utils.remove_no_values(update_pipeline_request)
+
+        _utils.patch(
+            resource,
+            self.session,
+            prepared_request
+        )
+
+    def update_pipeline_user(
+        self,
+        identifier: str,
+        principal_type: str,
+        access_right: str = None,
+    ) -> None:
+        resource = self.base_path
+
+        update_pipeline_user_request = {
+            "identifier": identifier,
+            "principal_type": principal_type,
+            "access_right": access_right
+        }
+
+        prepared_request = _utils.remove_no_values(update_pipeline_user_request)
+
+        _utils.post(
+            resource,
+            self.session,
+            prepared_request
+        )
+
+
