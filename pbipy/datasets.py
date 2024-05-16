@@ -454,6 +454,8 @@ class Dataset(Resource):
 
         if status == "Failed":
             raise RefreshDatasetError
+        
+        return refresh_id
 
     def refresh_history(
         self,
