@@ -69,7 +69,7 @@ class Pipeline(Resource):
         }
 
         prepared_request = _utils.remove_no_values(request)
-        resource = self.base_path + "/deploy"
+        resource = self.base_path + "/deployAll"
         raw = _utils.post_raw(
             resource,
             self.session,
