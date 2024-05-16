@@ -18,6 +18,7 @@ from pbipy.dataflows import Dataflow
 from pbipy.datasets import Dataset
 from pbipy.groups import Group
 from pbipy.reports import Report
+from pbipy.pipelines import Pipeline
 from pbipy import _utils
 
 
@@ -826,3 +827,15 @@ class PowerBI:
             resource,
             self.session,
         )
+
+    def pipeline(
+        self, 
+        pipeline: str | Pipeline
+    ) -> Pipeline:
+        if isinstance(pipeline, Pipeline):
+            return pipeline
+        
+        pipeline = Pipeline(pipeline, self.session)
+        pipeline.load()
+
+        return pipeline
