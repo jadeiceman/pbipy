@@ -30,6 +30,33 @@ class Pipeline(Resource):
 
         if raw:
             self._load_from_raw(raw)
+
+    def assign_workspace(
+        self,
+        stage_order: int,
+        workspace_id: str,
+    ) -> None:
+        assign_workspace_request = {
+            "workspaceId": workspace_id
+        }
+
+        resource = self.base_path + f"/stages/{stage_order}/assignWorkspace"
+
+        _utils.post(
+            resource,
+            self.session,
+            assign_workspace_request
+        )
+
+    def delete_pipeline(
+        self,
+    ) -> None:
+        resource = self.base_path
+        
+        _utils.delete(
+            resource,
+            self.session
+        )
     
     def get_pipeline_operation(
         self,
@@ -59,7 +86,7 @@ class Pipeline(Resource):
         options: dict = None,
         update_app_settings: dict = None, 
     ) -> dict:
-        request = {
+        deploy_all_request = {
             'sourceStageOrder': source_stage_order,
             'isBackwardDeployment': is_backward_deployment,
             'newWorkspace': new_workspace,
@@ -68,7 +95,7 @@ class Pipeline(Resource):
             'updateAppSettings': update_app_settings
         }
 
-        prepared_request = _utils.remove_no_values(request)
+        prepared_request = _utils.remove_no_values(deploy_all_request)
         resource = self.base_path + "/deployAll"
         raw = _utils.post_raw(
             resource,
@@ -125,7 +152,7 @@ class Pipeline(Resource):
         reports: list[dict] = None,
         update_app_settings: dict = None, 
     ) -> dict:
-        request = {
+        selective_deploy_request = {
             'sourceStageOrder': source_stage_order,
             'dashboards': dashboards,
             'dataflows': dataflows,
@@ -139,7 +166,7 @@ class Pipeline(Resource):
             'updateAppSettings': update_app_settings
         }
 
-        prepared_request = _utils.remove_no_values(request)
+        prepared_request = _utils.remove_no_values(selective_deploy_request)
         resource = self.base_path + "/deploy"
         raw = _utils.post_raw(
             resource,

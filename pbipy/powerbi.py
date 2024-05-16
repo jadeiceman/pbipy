@@ -838,4 +838,24 @@ class PowerBI:
         pipeline = Pipeline(pipeline, self.session)
         pipeline.load()
 
-        return pipeline
+        return pipeline    
+
+    def create_pipeline(
+        self,
+        display_name: str,
+        description: str = None,
+    ) -> dict:
+        create_pipeline_request = {
+            "displayName": display_name,
+            "description": description,
+        }
+
+        prepared_request = _utils.remove_no_values(create_pipeline_request)
+        resource = self.BASE_URL + "/pipelines"
+        raw = _utils.post_raw(
+            resource,
+            self.session,
+            prepared_request
+        )
+
+        return raw
